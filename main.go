@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -80,27 +81,25 @@ func parseNumber(s string) (int, error) {
 	if isRoman(s) {
 		return fromRoman(s)
 	}
-	n := 0
-	for _, c := range s {
-		if c < '0' || c > '9' {
-			return 0, fmt.Errorf("Вывод ошибки, так как неверный формат числа.")
-		}
-		n = n*10 + int(c-'0')
-		if n > 10 {
-			return 0, fmt.Errorf("Вывод ошибки, так как число больше 10.")
-		}
+	n, err := strconv.Atoi(s)
+	if err != nil {
+		return 0, fmt.Errorf("Вывод ошибки, так как число представлено неверно.")
+	}
+	if n > 10 {
+		return 0, fmt.Errorf("Вывод ошибки, так как число больше 10.")
 	}
 	return n, nil
 }
 
 // проверка на римскую цифру
 func isRoman(s string) bool {
-	for _, c := range s {
-		if c != 'I' && c != 'V' && c != 'X' {
-			return false
+	symbol := []string {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"}
+	for _, value := range symbol {
+		if s == value {
+			return true
 		}
 	}
-	return true
+	return false
 }
 
 // перевод римской цифры в число
